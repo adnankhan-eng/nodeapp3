@@ -17,15 +17,17 @@ pipeline {
                 sh 'docker build -t $DOCKER_IMAGE:$IMAGE_TAG .'
             }
         }
-
-        stage('Login to Docker Hub') {
-            steps {
-                // 🔹 Jenkins credentials use ho rahe hain
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred' usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'echo $PASS | docker login -u $USER --password-stdin'
-                }
-            }
+            stage('Login to Docker Hub') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-cred',
+            usernameVariable: 'USER',
+            passwordVariable: 'PASS'
+        )]) {
+            sh 'echo $PASS | docker login -u $USER --password-stdin'
         }
+    }
+}
 
         stage('Push Docker Image') {
             steps {
